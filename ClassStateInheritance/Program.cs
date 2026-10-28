@@ -3,23 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace ClassState
 {
-    class State
+    class Country
     {
-        string countryCode;
-        string countryName;
-        string establishmentYear;
-        string governmentForm;
-        int population;
-        double gdp;
-        double nationalDebt;
-
-        public State() { }
-
-        public State(string countryCode, string countryName, string establishmentYear,
-                     string governmentForm, int population, double GDP, double nationalDebt)
+        protected string countryCode;
+        protected string countryName;
+        protected string establishmentYear;
+        protected string governmentForm;
+        protected int population;
+        protected double gdp;
+        protected double nationalDebt;
+        public Country() { }
+        public Country(string countryCode, string countryName, string establishmentYear,
+                       string governmentForm, int population, double GDP, double nationalDebt)
         {
             this.countryCode = countryCode;
             this.countryName = countryName;
@@ -29,50 +26,42 @@ namespace ClassState
             this.gdp = GDP;
             this.nationalDebt = nationalDebt;
         }
-
         public string CountryCode
         {
             set { if (countryCode == null) countryCode = value; }
             get { return countryCode; }
         }
-
         public string CountryName
         {
             set { if (countryName == null) countryName = value; }
             get { return countryName; }
         }
-
         public string EstablishmentYear
         {
             set { establishmentYear = value; }
             get { return establishmentYear; }
         }
-
         public string GovernmentForm
         {
             set { governmentForm = value; }
             get { return governmentForm; }
         }
-
         public int Population
         {
             set { population = value; }
             get { return population; }
         }
-
         public double GDP
         {
             set { gdp = value; }
             get { return gdp; }
         }
-
         public double NationalDebt
         {
             set { nationalDebt = value; }
             get { return nationalDebt; }
         }
-
-        public double DebtToGdpPercent
+        public virtual double DebtToGdpPercent
         {
             get
             {
@@ -80,8 +69,7 @@ namespace ClassState
                 return (nationalDebt / gdp) * 100;
             }
         }
-
-        public void Show()
+        public virtual void Show()
         {
             Console.WriteLine();
             Console.WriteLine("Country name: " + CountryName);
@@ -94,7 +82,15 @@ namespace ClassState
             Console.WriteLine("Debt to GDP: " + DebtToGdpPercent.ToString("F2") + "%");
         }
     }
-
+    class State : Country
+    {
+        public State() : base() { }
+        public State(string countryCode, string countryName, string establishmentYear,
+                     string governmentForm, int population, double GDP, double nationalDebt)
+            : base(countryCode, countryName, establishmentYear, governmentForm, population, GDP, nationalDebt)
+        {
+        }
+    }
     class Program
     {
         static int ReadInt(string prompt)
@@ -108,7 +104,6 @@ namespace ClassState
                 Console.WriteLine("Error: please enter an integer!");
             }
         }
-
         static double ReadDouble(string prompt)
         {
             while (true)
@@ -120,7 +115,6 @@ namespace ClassState
                 Console.WriteLine("Error: please enter a number!");
             }
         }
-
         static string ReadString(string prompt)
         {
             while (true)
@@ -132,20 +126,15 @@ namespace ClassState
                 Console.WriteLine("Error: field cannot be empty!");
             }
         }
-
         static void Main(string[] args)
         {
             int n = 0, i;
-
             State usa = new State("US", "United States", "1776", "Federal Republic", 331000000, 25462.0, 31000.0);
             usa.Show();
-
             State[] states = new State[99];
             for (i = 0; i < 99; i++)
                 states[i] = new State();
-
             string subkey, key;
-
             do
             {
                 Console.WriteLine();
@@ -158,7 +147,6 @@ namespace ClassState
                 Console.WriteLine();
                 Console.Write("Your choice: ");
                 key = Console.ReadLine();
-
                 switch (key)
                 {
                     case "1":
@@ -169,7 +157,6 @@ namespace ClassState
                                 Console.WriteLine("Array is full (maximum 99 records)!");
                                 break;
                             }
-
                             states[n].CountryCode = ReadString("Enter country code: ");
                             states[n].CountryName = ReadString("Enter country name: ");
                             states[n].EstablishmentYear = ReadString("Enter establishment year: ");
@@ -177,26 +164,21 @@ namespace ClassState
                             states[n].Population = ReadInt("Enter population: ");
                             states[n].GDP = ReadDouble("Enter GDP: ");
                             states[n].NationalDebt = ReadDouble("Enter national debt: ");
-
                             n++;
-
                             Console.Write("Continue? [y/N]: ");
                             subkey = Console.ReadLine()?.Trim().ToLower();
                         } while (subkey == "y");
                         break;
-
                     case "2":
                         for (i = 0; i < n; i++)
                         {
                             states[i].Show();
                         }
                         break;
-
                     case "3":
                         {
                             bool found = false;
                             string code = ReadString("Enter country code: ");
-
                             for (i = 0; i < n; i++)
                             {
                                 if (states[i].CountryCode != null &&
@@ -207,7 +189,6 @@ namespace ClassState
                                     found = true;
                                 }
                             }
-
                             if (!found)
                                 Console.WriteLine("No country with this code!");
                         }
